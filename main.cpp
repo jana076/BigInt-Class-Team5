@@ -140,8 +140,47 @@ public:
 
     // Multiplication assignment operator (x *= y)
     BigInt& operator*=(const BigInt& other) {
-        // TODO: Implement this operator
+
+    if (number == "0" || other.number == "0") {
+        number = "0";
+        isNegative = false;
         return *this;
+    }
+
+    bool resultNegative = (isNegative != other.isNegative);
+
+    int n = number.length();
+    int m = other.number.length();
+
+    string result(n + m, '0');
+
+    for (int i = n - 1; i >= 0; i--) {
+
+        int carry = 0;
+
+        for (int j = m - 1; j >= 0; j--) {
+
+            int digit1 = number[i] - '0';
+            int digit2 = other.number[j] - '0';
+
+            int sum = digit1 * digit2
+                    + (result[i + j + 1] - '0')
+                    + carry;
+
+            result[i + j + 1] = (sum % 10) + '0';
+
+            carry = sum / 10;
+        }
+
+        result[i] = carry + '0';
+    }
+
+    number = result;
+    isNegative = resultNegative;
+
+    removeLeadingZeros();
+
+    return *this;
     }
 
     // Division assignment operator (x /= y)
@@ -221,9 +260,8 @@ BigInt operator-(BigInt lhs, const BigInt& rhs) {
 
 // Binary multiplication operator (x * y)
 BigInt operator*(BigInt lhs, const BigInt& rhs) {
-    BigInt result;
-    // TODO: Implement this operator
-    return result;
+    lhs *= rhs;
+    return lhs;
 }
 
 // Binary division operator (x / y)
